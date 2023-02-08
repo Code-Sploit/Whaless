@@ -1,9 +1,10 @@
 #include <assert.h>
-#include <chess.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <zobrist.h>
+
+#include <engine/include/chess.h>
+#include <engine/include/zobrist.h>
 
 const struct __board_pos NULL_BOARDPOS = {0xF, 0xF};
 

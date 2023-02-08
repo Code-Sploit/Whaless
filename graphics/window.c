@@ -40,15 +40,31 @@ __vec2_t* get_window_size(__window_t* window)
     if (window == NULL) return NULL;
 
     __vec2_t* win_size_vec = vec2(0, 0);
-    SDL_GetWindowSize(window, (int*)&win_size_vec->x, (int*)&win_size_vec->y);
+    SDL_GetWindowSize(window->base_window, (int*)&win_size_vec->x, (int*)&win_size_vec->y);
 
     return win_size_vec;
 }
 
 void window_set_bg(__window_t* window, unsigned char r, unsigned char g, unsigned char b, unsigned char a)
 {
+    if (window == NULL) return;
+
     window->background.r = r;
     window->background.g = g;
     window->background.b = b;
     window->background.a = a;
+}
+
+void window_clear_bufffer(__window_t* window)
+{
+    if (window == NULL) return;
+
+    SDL_RenderClear(window->base_renderer);
+}
+
+void window_swap_bufffer(__window_t* window)
+{
+    if (window == NULL) return;
+
+    SDL_RenderPresent(window->base_renderer);
 }

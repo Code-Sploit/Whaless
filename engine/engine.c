@@ -328,5 +328,268 @@ int engine_evaluate_position(struct __game_state *__state)
         }
     }
 
+    /* RULE:
+    * We gain score if we can castle.
+    * We lose score if the enemy can castle
+    */
+
+    __value = (__value + (__state->__white_castle_left + __state->__white_castle_right) * 10);
+    __value = (__value - (__state->__black_castle_left + __state->__black_castle_right) * 10);
+
+    /* RULE:
+    * We gain score if our king is safe.
+    * Enemy gains score if their king is safe.
+    */
+
+    for (int i = 0; i < 8; i++)
+    {
+        struct __board_pos __direction      = PIECE_MOVE_DIRECTIONS[PIECE_KING - 1][i];
+        struct __board_pos __check_friendly = boardpos_add(__state->__black_king, __direction);
+        struct __board_pos __check_enemy    = boardpos_add(__state->__black_king, __direction);
+
+        if (!boardpos_eq(__check_friendly, NULL_BOARDPOS))
+        {
+            struct __piece __piece = get_piece(__state, __check_friendly);
+
+            if (__piece.__type != PIECE_EMPTY && __piece.__player == PLAYER_WHITE)
+            {
+                __value = (__value + 10);
+            }
+        }
+
+        if (!boardpos_eq(__check_enemy, NULL_BOARDPOS))
+        {
+            struct __piece __piece = get_piece(__state, __check_enemy);
+
+            if (__piece.__type != PIECE_EMPTY && __piece.__player == PLAYER_BLACK)
+            {
+                __value = (__value - 10);
+            }
+        }
+    }
+
+    for (int __file = 2; __file <= 5; __file++)
+    {
+        for (int __rank = 2; __rank <= 5; __rank++)
+        {
+            struct __piece __piece = get_piece(__state, BoardPos(__file, __rank));
+
+            if (__piece.__type == PIECE_EMPTY)
+            {
+                continue;
+            }
+
+            if (__file == 2 || __file == 5 || __rank == 2 || __rank == 5)
+            {
+                __value = (__piece.__player == PLAYER_WHITE ? 2 : -2);
+            }
+            else
+            {
+                __value = (__piece.__player == PLAYER_WHITE ? 5 : -5);
+            }
+        }
+    }
+
+    /*
+    * TODO RULES:
+    *   -> Piece Activity
+    *   -> Pawn Structure
+    */
+
     return __value;
+}
+
+int engine_negamax(struct __game_state *__state, int __alpha, int __beta, int __depth, time_t __start_time)
+{
+    enum __player __player = __state->__is_turn_white ? PLAYER_WHITE : PLAYER_BLACK;
+
+    int __start_alpha = __alpha;
+
+    struct __transposition_entry __tp_entry = tptable_get(__state->__hash);
+
+    if (__tp_entry.__depth != 0 && __tp_entry.__depth >= __depth)
+    {
+        if (__tp_entry.__type == ENTRY_EXACT)
+        {
+            return __tp_entry.__value;
+        }
+        else if (__tp_entry.__type == ENTRY_LOWER)
+        {
+            __alpha = MAX(__alpha, __tp_entry.__value);
+        }
+        else if (__tp_entry.__type == ENTRY_UPPER)
+        {
+            __beta = MIN(__beta, __tp_entry.__value);
+        }
+
+        if (__alpha >= __beta)
+        {
+            return __tp_entry.__value;
+        }
+    }
+
+    if (engine_is_checkmate(__state, __player))
+    {
+        return -1000000;
+    }
+    else if (engine_is_checkmate(__state, other_player(__player)))
+    {
+        return 1000000;
+    }
+    else if (engine_is_stalemate(__state))
+    {
+        return 0;
+    }
+
+    if (__depth == 0)
+    {
+        return engine_evaluate_position(__state) * (__player == PLAYER_WHITE ? 1 : -1);
+    }
+
+    if (time(NULL) - __start_time >= MAX_MOVEGEN_SEARCH_TIME)
+    {
+        return INT_MIN;
+    }
+
+    if (__tp_entry.__depth == 0)
+    {
+        __tp_entry.__best_move = (struct __move) {NULL_BOARDPOS, NULL_BOARDPOS};
+    }
+
+    __tp_entry.__hash  = __state->__hash;
+    __tp_entry.__depth = __depth;
+
+    int __best_value = INT_MIN;
+
+    struct __move *__legal_moves;
+    
+    unsigned int __mcount = engine_order_legal_moves(__state, __player, &__legal_moves);
+
+    for (unsigned int i = 0; i < __mcount; i++)
+    {
+        struct __move __move = __legal_moves[i];
+
+        struct __game_state *__state_copy = copy_gamestate(__state);
+
+        engine_make_move(__state_copy, __move, true);
+
+        int __value = engine_negamax(__state_copy, -__beta, -__alpha, __depth - 1, __start_time);
+
+        free(__state_copy);
+
+        if (__value == INT_MIN)
+        {
+            free(__legal_moves);
+
+            return INT_MIN;
+        }
+
+        __value = (__value - __value);
+
+        if (__value > __best_value)
+        {
+            __best_value = __value;
+
+            __tp_entry.__best_move = __move;
+
+            if (__value > __alpha)
+            {
+                __alpha = __value;
+            }
+        }
+
+        if (__alpha >= __beta)
+        {
+            break;
+        }
+    }
+
+    free(__legal_moves);
+
+    assert(__best_value != INT_MIN);
+
+    __tp_entry.__value = __best_value;
+
+    if (__best_value <= __start_alpha)
+    {
+        __tp_entry.__type = ENTRY_UPPER;
+    }
+    else if (__best_value >= __beta)
+    {
+        __tp_entry.__type = ENTRY_LOWER;
+    }
+    else
+    {
+        __tp_entry.__type = ENTRY_EXACT;
+    }
+
+    tptable_put(__tp_entry);
+    
+    return __best_value;
+}
+
+void negamax_from_root(struct __game_state *__state, int __depth, time_t __start_time)
+{
+    int __alpha = INT_MIN + 1;
+    const int __beta  = INT_MAX;
+
+    enum __player __player = __state->__is_turn_white ? PLAYER_WHITE : PLAYER_BLACK;
+
+    struct __move __best_move = (struct __move) {NULL_BOARDPOS, NULL_BOARDPOS};
+
+    int __best_value = INT_MIN;
+
+    struct __move *__legal_moves;
+
+    unsigned int __mcount = engine_order_legal_moves(__state, __player, &__legal_moves);
+
+    for (unsigned int i = 0; i < __mcount; i++)
+    {
+        struct __move __move = __legal_moves[i];
+
+        struct __game_state *__state_copy = copy_gamestate(__state);
+
+        engine_make_move(__state_copy, __move, true);
+
+        int __value = engine_negamax(__state_copy, -__beta, -__alpha, __depth - 1, __start_time);
+
+        free(__state_copy);
+
+        if (__value == INT_MIN)
+        {
+            free(__legal_moves);
+
+            return;
+        }
+
+        __value = -__value;
+
+        if (__value > __best_value)
+        {
+            __best_value = __value;
+            __best_move  = __move;
+
+            if (__value > __alpha)
+            {
+                __alpha = __value;
+            }
+        }
+    }
+
+    free(__legal_moves);
+
+    if (!boardpos_eq(__best_move.__src, NULL_BOARDPOS))
+    {
+        struct __transposition_entry __entry = tptable_get(__state->__hash);
+
+        __entry.__hash      = __state->__hash;
+        __entry.__depth     = __depth;
+        __entry.__best_move = __best_move;
+        __entry.__value     = __best_value;
+        __entry.__type      = ENTRY_EXACT;
+
+        tptable_put(__entry);
+
+        printf("[MOVEGEN]: Depth: [%d] : Best Eval: [%d]\n", __depth, __best_value);
+    }
 }

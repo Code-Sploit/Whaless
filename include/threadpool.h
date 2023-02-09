@@ -56,4 +56,13 @@ struct __atomic_counter
     atomic_ushort __count;
 };
 
+struct __thread_pool *threadpool_init(void);
+
+void threadpool_enqueue(struct __thread_pool *__pool, __task_func __func, void *__arg);
+void threadpool_deinit(struct __thread_pool *__pool);
+
+struct __atomic_counter *acnt_init(unsigned short __val);
+
+bool acnt_dec(struct __atomic_counter *__counter);
+
 #endif

@@ -91,8 +91,8 @@ void deinit_gamestate(struct __game_state *__state);
 int get_enpassant_target_file(struct __game_state *__state, enum __player __player);
 
 void unset_enpassant_target_file(struct __game_state *__state, enum __player __attacking_player);
-void unset_castlert_left(struct __game_state *__state, enum __player __player);
-void unset_castlert_right(struct __game_state *__state, enum __player __player);
+void unset_castle_left(struct __game_state *__state, enum __player __player);
+void unset_castle_right(struct __game_state *__state, enum __player __player);
 void boardpos_to_algn(struct __board_pos __pos, char *__buf);
 
 int move_to_str(struct __game_state *__state, struct __board_pos __from, struct __board_pos __to, char *__buf);

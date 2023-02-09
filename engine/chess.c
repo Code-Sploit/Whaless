@@ -84,6 +84,18 @@ void unset_castle_left(struct __game_state *__state, enum __player __player)
     }
 }
 
+void unset_castle_right(struct __game_state *__state, enum __player __player)
+{
+    if (__player == PLAYER_WHITE)
+    {
+        __state->__white_castle_right = false;
+    }
+    else
+    {
+        __state->__black_castle_right = false;
+    }
+}
+
 void clear_board(struct __game_state *__state)
 {
     memset(__state->__board, 0, sizeof(__state->__board));

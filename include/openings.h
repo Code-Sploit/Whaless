@@ -6,7 +6,7 @@
 
 struct __opening_entry
 {
-    ZobristHash __hash;
+    zobrist_hash __hash;
 
     struct __move *__moves;
 
@@ -16,6 +16,6 @@ struct __opening_entry
 void openings_initialize(void);
 void openings_deinitialize(void);
 
-struct __opening_entry *openings_find(ZobristHash __hash);
+struct __opening_entry *openings_find(zobrist_hash __hash);
 
 #endif

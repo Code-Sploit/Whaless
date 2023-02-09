@@ -30,7 +30,7 @@ for c in csources:
 
 print("\nLinking Whaless...\n")
 
-os.system("gcc -o whaless " + total + " -lSDL2")
+os.system("gcc -o whaless " + total + " -lSDL2 -lpthread")
 
 print("Done!\nRunning Whaless, the best chess engine lol")
 

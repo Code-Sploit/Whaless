@@ -3,6 +3,6 @@
 
 #include <chess.h>
 
-ZobristHash zobrist_hash_state(struct __game_state *__state);
+zobrist_hash zobrist_hash_state(struct __game_state *__state);
 
 #endif

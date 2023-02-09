@@ -7,7 +7,7 @@
 #include <stdlib.h>
 
 static struct __transposition_entry __tp_table[TRANSPOSITION_TABLE_SIZE] = {0};
-static ZobristHash __protected_hash = 0;
+static zobrist_hash __protected_hash = 0;
 
 #ifdef HAS_C11_CONCURRENCY
 static mtx_t __tp_table_mutex;
@@ -39,7 +39,7 @@ void tptable_deinit(void)
 #endif
 }
 
-struct __transposition_entry tptable_get(ZobristHash __hash)
+struct __transposition_entry tptable_get(zobrist_hash __hash)
 {
 #ifdef HAS_C11_CONCURRENCY
     check_error(mtx_lock(&__tp_table_mutex));
@@ -95,7 +95,7 @@ void tptable_clear(void)
 #endif
 }
 
-void tptable_set_protected_hash(ZobristHash __hash)
+void tptable_set_protected_hash(zobrist_hash __hash)
 {
 #ifdef HAS_C11_CONCURRENCY
     check_error(mtx_lock(&__tp_table_mutex));

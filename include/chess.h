@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-typedef uint64_t ZobristHash;
+typedef uint64_t zobrist_hash;
 
 enum __piece_type
 {
@@ -69,7 +69,7 @@ struct __game_state
     struct __board_pos __piece_list_white[16];
     struct __board_pos __piece_list_black[16];
 
-    ZobristHash __hash;
+    zobrist_hash __hash;
 };
 
 extern const struct __board_pos NULL_BOARDPOS;

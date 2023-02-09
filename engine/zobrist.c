@@ -8,7 +8,7 @@ static inline int zobrist_ptp(struct __piece __piece)
     return 2 * (6 - __piece.__type) + (__piece.__player = PLAYER_WHITE ? 1 : 0);
 }
 
-ZobristHash zobrist_hash_state(struct __game_state *__state)
+zobrist_hash zobrist_hash_state(struct __game_state *__state)
 {
     static const int PIECES = 0;
     static const int WHITE_TO_MOVE = 780;
@@ -18,7 +18,7 @@ ZobristHash zobrist_hash_state(struct __game_state *__state)
     static const int BLACK_CASTLE_LEFT = 771;
     static const int ENPASSANT = 772;
 
-    ZobristHash __hash = 0;
+    zobrist_hash __hash = 0;
 
     for (int i = 0; i < 16; i++)
     {

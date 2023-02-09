@@ -35,12 +35,12 @@ void window_handle_events(__window_t* window)
     }
 }
 
-__vec2_t* get_window_size(__window_t* window)
+__vec2_t get_window_size(__window_t* window)
 {
-    if (window == NULL) return NULL;
+    if (window == NULL) return vec2(0, 0);
 
-    __vec2_t* win_size_vec = vec2(0, 0);
-    SDL_GetWindowSize(window->base_window, (int*)&win_size_vec->x, (int*)&win_size_vec->y);
+    __vec2_t win_size_vec = vec2(0, 0);
+    SDL_GetWindowSize(window->base_window, (int*)&win_size_vec.x, (int*)&win_size_vec.y);
 
     return win_size_vec;
 }

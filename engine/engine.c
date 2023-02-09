@@ -188,7 +188,7 @@ unsigned int engine_order_legal_moves(struct __game_state *__state, enum __playe
             continue;
         }
 
-        struct __piece __src_piece = get_piece(__state, __src);
+        // struct __piece __src_piece = get_piece(__state, __src);
 
         if (__msize - __midx < 27)
         {

@@ -5,14 +5,16 @@
 
 /* GUI Settings (might not be used) */
 
-#define BOARD_SIZE 504
-#define BOARD_SQUARE_SIZE (int) (BOARD_SIZE / 8)
+#define BOARD_SIZE        960
+#define BOARD_SQUARE_SIZE (int)(BOARD_SIZE / 8)
 
-#define WINDOW_WIDTH 896
-#define WINDOW_HEIGHT 504
+#define WINDOW_WIDTH  960
+#define WINDOW_HEIGHT 960
 
-#define LIGHT_SQUARE_COLOR 0xFFFEDBFF
-#define DARK_SQUARE_COLOR  0x38A3BEFF
+#define WINDOW_BACKGROUND  30, 20, 25, 255
+
+#define LIGHT_SQUARE_COLOR 255, 254, 219, 255
+#define DARK_SQUARE_COLOR  56,  163, 190, 255
 
 /* Transposition tables */
 

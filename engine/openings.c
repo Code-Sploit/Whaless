@@ -53,7 +53,7 @@ static struct __opening_entry *openings_search_binary(unsigned long __hash, unsi
     return NULL;
 }
 
-struct __opening_entry *openings_find(ZobristHash __hash)
+struct __opening_entry *openings_find(zobrist_hash __hash)
 {
     if (__items_count == 0)
     {

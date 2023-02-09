@@ -13,7 +13,7 @@ enum __entry_type
 
 struct __transposition_entry
 {
-    ZobristHash __hash;
+    zobrist_hash __hash;
 
     struct __move __best_move;
 
@@ -24,12 +24,12 @@ struct __transposition_entry
     enum __entry_type __type;
 };
 
-struct __transposition_entry tptable_get(ZobristHash __hash);
+struct __transposition_entry tptable_get(zobrist_hash __hash);
 
 void tptable_put(struct __transposition_entry __entry);
 void tptable_clear(void);
 void tptable_init(void);
 void tptable_deinit(void);
-void tptable_set_protected_hash(ZobristHash __hash);
+void tptable_set_protected_hash(zobrist_hash __hash);
 
 #endif

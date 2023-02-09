@@ -4,11 +4,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-__vec2_t* vec2(long x, long y)
+__vec2_t vec2(long x, long y)
 {
-    __vec2_t* tmp_vec2 = calloc(sizeof(__vec2_t), 1);
-    tmp_vec2->x = x;
-    tmp_vec2->y = y;
+    __vec2_t tmp_vec2;
+    tmp_vec2.x = x;
+    tmp_vec2.y = y;
 
     return tmp_vec2;
 }

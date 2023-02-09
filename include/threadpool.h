@@ -17,15 +17,15 @@
 typedef struct
 {
     char _;
-} __mtx_t;
+} mtx_t;
 
 typedef struct
 {
     char _;
-} __cnd_t;
+} cnd_t;
 
-typedef size_t __atomic_size_t;
-typedef unsigned short __atomic_ushort;
+typedef size_t atomic_size_t;
+typedef unsigned short atomic_ushort;
 
 #endif
 
@@ -40,20 +40,20 @@ struct __task
 
 struct __thread_pool
 {
-    __mtx_t __mutex;
-    __cnd_t __available;
+    mtx_t __mutex;
+    cnd_t __available;
 
     struct __task __queue[THREADPOOL_QUEUE_SIZE];
 
     size_t __queue_front;
     size_t __queue_back;
 
-    __atomic_size_t __thread_count;
+    atomic_size_t __thread_count;
 };
 
 struct __atomic_counter
 {
-    __atomic_ushort __count;
+    atomic_ushort __count;
 };
 
 #endif

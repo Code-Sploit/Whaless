@@ -9,7 +9,7 @@
 #include <unistd.h>
 #endif
 
-static unsigned long __nproc(void)
+static unsigned long nproc(void)
 {
     char *__count = getenv("CHESS_NPROC");
 
@@ -142,7 +142,7 @@ static bool task_stop(void *__arg)
 #ifdef HAS_C11_CONCURRENCY
 static void threadpool_stop(struct __thread_pool *__pool)
 {
-    struct __task __stop = {.__func = __task_stop, .__arg = NULL};
+    struct __task __stop = {.__func = task_stop, .__arg = NULL};
 
     while (atomic_load(&__pool->__thread_count) > 0)
     {
@@ -176,10 +176,10 @@ struct __thread_pool *threadpool_init(void)
 
     for (size_t i = 0; i < __thread_count; i++)
     {
-        thrd_t __thread;
+        thrd_t thread;
 
-        check_error(thrd_create(&__thread, (thrd_start_t) thread_start_func, __pool));
-        check_error(thrd_detach(__thread));
+        check_error(thrd_create(&thread, (thrd_start_t) thread_start_func, __pool));
+        check_error(thrd_detach(thread));
     }
 #else
     printf("[THREADPOOL]: Compiled without C11-threads support. Deactivating threadpool\n");
@@ -201,7 +201,7 @@ void threadpool_enqueue(struct __thread_pool *__pool, __task_func __func, void *
     }
     else
     {
-        check_error(cnd_signal(&__pool->__task_available));
+        check_error(cnd_signal(&__pool->__available));
     }
 #else
     __func(__arg);

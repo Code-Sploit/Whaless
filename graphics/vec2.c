@@ -1,7 +1,8 @@
-#include "./vec2.h"
-#include "../core.h"
+#include <vec2.h>
+#include <core.h>
 
 #include <stdlib.h>
+#include <stdio.h>
 
 __vec2_t* vec2(long x, long y)
 {

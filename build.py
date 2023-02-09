@@ -1,11 +1,13 @@
 #!/usr/bin/python3
 
-CFLAGS='-c -O3 -std=c18 -Wall -I. '
+CFLAGS='-c -O3 -std=c11 -Wall -I include '
 
 csources = []
 
 import fnmatch
 import os
+
+os.system("rm -rf build")
 
 for root, dirnames, filenames in os.walk('.'):
     for filename in fnmatch.filter(filenames, '*.c'):
@@ -28,7 +30,7 @@ for c in csources:
 
 print("\nLinking Whaless...\n")
 
-os.system("gcc -o " + total + " -lSDL2 -lSDL2_image -lSDL2_ttf")
+os.system("gcc -o whaless " + total + " -lSDL2")
 
 print("Done!\nRunning Whaless, the best chess engine lol")
 

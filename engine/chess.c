@@ -3,14 +3,14 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <engine/include/chess.h>
-#include <engine/include/zobrist.h>
+#include <chess.h>
+#include <zobrist.h>
 
 const struct __board_pos NULL_BOARDPOS = {0xF, 0xF};
 
 struct __board_pos BoardPos(int8_t __file, int8_t __rank)
 {
-    return (struct BoardPos) {__file, __rank};
+    return (struct __board_pos) {__file, __rank};
 }
 
 bool boardpos_eq(struct __board_pos __a, struct __board_pos __b)
@@ -22,12 +22,12 @@ bool boardpos_eq(struct __board_pos __a, struct __board_pos __b)
 
 struct __board_pos boardpos_add(struct __board_pos __a, struct __board_pos __b)
 {
-    struct __board_pos __r = {__a.__file + __b.__file, __a.__rank + b.__rank};
+    struct __board_pos __r = {__a.__file + __b.__file, __a.__rank + __b.__rank};
 
     return (__r.__file > 7 || __r.__rank > 7 || __r.__file < 0 || __r.__rank < 0) ? NULL_BOARDPOS : __r;
 }
 
-struct __piece_t Piece(enum __piece_type __type, enum __player __player)
+struct __piece Piece(enum __piece_type __type, enum __player __player)
 {
     struct __piece __p = {__type, __player};
 
@@ -143,7 +143,7 @@ struct __game_state *init_gamestate(void)
         __state->__piece_list_black[i] = BoardPos(i, 0);
     }
 
-    __state->__hash = hash_state(__state);
+    __state->__hash = zobrist_hash_state(__state);
 
     return __state;
 }
@@ -261,7 +261,7 @@ int move_to_str(struct __game_state *__state, struct __board_pos __from, struct 
 
         if (__to_piece.__type != PIECE_EMPTY)
         {
-            if (__to_buffer = __buffer)
+            if (__to_buffer == __buffer)
             {
                 boardpos_to_algn(__from, __to_buffer);
 

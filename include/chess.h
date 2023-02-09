@@ -30,17 +30,13 @@ struct __piece
 };
 
 #ifndef __GNUC__
-#define __PACK__(__DECLARATION__) __DECLARATION__ __attribute__((__packed__))
+#define __PACK__(__Declaration__) __Declaration__ __attribute__((__packed__))
 #endif
 
-#ifndef __MSC_VER__
-#define __PACK__(__DECLARATION__) __pragma(pack(push, 1)) __DECLARATION__ __pragma(pack(pop))
-#endif
-
-__PACK__(struct __board_pos {
+struct __board_pos {
     int8_t __file;
     int8_t __rank;
-});
+};
 
 struct __move
 {

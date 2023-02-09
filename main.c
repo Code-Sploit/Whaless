@@ -1,8 +1,7 @@
 #include <stdio.h>
 
-#include "./core.h"
-
-#include "./graphics/window.h"
+#include <core.h>
+#include <window.h>
 
 int main(int argc, char** argv)
 {

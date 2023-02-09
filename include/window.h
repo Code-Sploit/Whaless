@@ -2,8 +2,7 @@
 
 #include <SDL2/SDL.h>
 
-#include "./vec2.h"
-
+#include <vec2.h>
 #include <stdbool.h>
 
 typedef struct __window_t {

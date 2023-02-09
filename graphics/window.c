@@ -1,13 +1,21 @@
 #include <window.h>
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 
 __window_t* create_new_window(int argc, char** argv, int window_width, int window_height)
 {
     int __status = SDL_Init(SDL_INIT_EVERYTHING);
     if (__status != 0)
     {
-        printf("Couldn't initialize SDL");
+        printf("Couldn't initialize SDL\n");
+        return NULL;
+    }
+
+    __status = IMG_Init(IMG_INIT_PNG);
+    if (__status == 0)
+    {
+        printf("Couldn't initialize SDL image\n");
         return NULL;
     }
 

@@ -8,6 +8,8 @@
         "engine.h": "c",
         "app.h": "c",
         "core.h": "c",
-        "window.h": "c"
+        "window.h": "c",
+        "sdl.h": "c",
+        "sdl_image.h": "c"
     }
 }

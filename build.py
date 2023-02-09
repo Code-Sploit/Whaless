@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-CFLAGS='-c -O3 -std=c11 -Wall -I include '
+CFLAGS='-c -O3 -std=c11 -I include '
 
 csources = []
 

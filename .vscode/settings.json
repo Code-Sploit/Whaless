@@ -8,6 +8,7 @@
         "draw.h": "c",
         "sdl_image.h": "c",
         "engine.h": "c",
-        "chess.h": "c"
+        "chess.h": "c",
+        "app.h": "c"
     }
 }

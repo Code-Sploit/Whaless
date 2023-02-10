@@ -25,6 +25,20 @@ static SDL_Texture* white_pawn   = NULL;
 static SDL_Texture* white_queen  = NULL;
 static SDL_Texture* white_rook   = NULL;
 
+static bool game_end = false;
+
+bool get_game_end()
+{
+    return game_end;
+}
+
+void set_game_end(bool game_end)
+{
+    game_end = engine_is_checkmate(__fstate_glob.__state, PLAYER_WHITE) || 
+               engine_is_checkmate(__fstate_glob.__state, PLAYER_BLACK) || 
+               engine_is_stalemate(__fstate_glob.__state);
+}
+
 void load_images_pieces(__window_t* window)
 {
     dark_bishop  = load_image(window, "./assets/pieces/dark_bishop.png");
@@ -146,8 +160,15 @@ void draw_table_info(__window_t* window)
     set_font_size(24);
     draw_text(window, 650, 10, "Whaless");
     set_font_size(20);
-    draw_text(window, 650, 40, "Player move: %s", __fstate_glob.__state->__is_turn_white == true ? "White" : "Black");
-    draw_text(window, 650, 67, "Move count: %d", __fstate_glob.__state->__move_count);
+    if (game_end == false)
+    {
+        draw_text(window, 650, 40, "Player move: %s", __fstate_glob.__state->__is_turn_white == true ? "White" : "Black");
+        draw_text(window, 650, 67, "Move count: %d", __fstate_glob.__state->__move_count);
+    }
+    else
+    {
+        draw_text(window, 650, 40, "Game ended");
+    }
 }
 
 void app_draw(__window_t* window)

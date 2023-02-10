@@ -20,4 +20,8 @@ void draw_table_chess(__window_t* window);
 
 void app_draw(__window_t* window);
 
+bool get_game_end();
+
+void set_game_end(bool game_end);
+
 #endif

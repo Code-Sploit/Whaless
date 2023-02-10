@@ -5,6 +5,7 @@
         "config.h": "c",
         "stdbool.h": "c",
         "window.h": "c",
-        "draw.h": "c"
+        "draw.h": "c",
+        "sdl_image.h": "c"
     }
 }

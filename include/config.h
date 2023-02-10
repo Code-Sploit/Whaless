@@ -13,8 +13,8 @@
 
 #define WINDOW_BACKGROUND  30, 20, 25, 255
 
-#define LIGHT_SQUARE_COLOR 255, 254, 219, 255
-#define DARK_SQUARE_COLOR  56,  163, 190, 255
+#define LIGHT_SQUARE_COLOR 227, 193, 111, 255
+#define DARK_SQUARE_COLOR  184, 139, 74,  255
 
 /* Transposition tables */
 

@@ -114,8 +114,15 @@ void draw_table_chess(__window_t* window)
     }
 }
 
-void app_draw(__window_t* window)
+void draw_table_info(__window_t* window)
 {
     draw_rect(window, vec2(640, 0), vec2(300, WINDOW_HEIGHT), (__color_t){ WINDOW_BACKGROUND });
+    set_font_size(24);
+    draw_text(window, 650, 10, "Whaless");
+}
+
+void app_draw(__window_t* window)
+{
+    draw_table_info(window);
     draw_table_chess(window);
 }

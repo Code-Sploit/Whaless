@@ -1,8 +1,17 @@
 #include <draw.h>
 #include <window.h>
+#include <config.h>
+#include <font.h>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+
+static int CURRENT_FONT_SIZE = 20;
+
+void set_font_size(int size) 
+{
+    CURRENT_FONT_SIZE = size;
+}
 
 void draw_rect(__window_t* window, __vec2_t pos, __vec2_t scale, __color_t color)
 {
@@ -38,4 +47,64 @@ SDL_Texture* load_image(__window_t* window, char* path)
     SDL_FreeSurface(surface_image);
 
     return texture_image;
+}
+
+__vec2_t draw_text(__window_t* win, int x, int y, char* format, ...)
+{
+    va_list arg;
+    va_start(arg, format);
+    __vec2_t vec2 = draw_text_va(win, x, y, format, arg);
+    va_end(arg);
+
+    return vec2;
+}
+
+__vec2_t draw_text_va(__window_t* win, int x, int y, char* format, va_list va)
+{
+    char buffer[2048];
+    vsprintf(buffer, format, va);
+
+    SDL_Color colorfg = { FONT_COLOR };
+    SDL_Surface* surface = TTF_RenderText_Blended_Wrapped(get_default_font(CURRENT_FONT_SIZE), buffer, colorfg, get_window_size(win).x - x);
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(win->base_renderer, surface);
+
+    int font_w = 0;
+    int font_h = 0;
+    SDL_QueryTexture(texture, NULL, NULL, &font_w, &font_h);
+    SDL_Rect rect = { x, y, font_w, font_h };
+    SDL_RenderCopy(win->base_renderer, texture, NULL, &rect);
+    SDL_DestroyTexture(texture);
+    SDL_FreeSurface(surface);
+
+    __vec2_t vec2 = { font_w, font_h };
+    return vec2;
+}
+
+__vec2_t get_size_text(__window_t* win, int x, int y, char* format, ...)
+{
+    va_list arg;
+    va_start(arg, format);
+    __vec2_t vec2 = get_size_text_va(win, x, y, format, arg);
+    va_end(arg);
+
+    return vec2;
+}
+
+__vec2_t get_size_text_va(__window_t* win, int x, int y, char* format, va_list va)
+{
+    char buffer[2048];
+    vsprintf(buffer, format, va);
+
+    SDL_Color colorfg = { FONT_COLOR };
+    SDL_Surface* surface = TTF_RenderText_Blended_Wrapped(get_default_font(CURRENT_FONT_SIZE), buffer, colorfg, get_window_size(win).x - x);
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(win->base_renderer, surface);
+
+    int font_w = 0;
+    int font_h = 0;
+    SDL_QueryTexture(texture, NULL, NULL, &font_w, &font_h);
+    SDL_DestroyTexture(texture);
+    SDL_FreeSurface(surface);
+
+    __vec2_t vec2 = { font_w, font_h };
+    return vec2;
 }

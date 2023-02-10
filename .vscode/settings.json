@@ -1,15 +1,10 @@
 {
     "files.associations": {
+        "sdl_ttf.h": "c",
+        "font.h": "c",
         "config.h": "c",
         "stdbool.h": "c",
-        "vec2.h": "c",
-        "chess.h": "c",
-        "draw.h": "c",
-        "engine.h": "c",
-        "app.h": "c",
-        "core.h": "c",
         "window.h": "c",
-        "sdl.h": "c",
-        "sdl_image.h": "c"
+        "draw.h": "c"
     }
 }

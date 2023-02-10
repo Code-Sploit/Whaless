@@ -1,5 +1,6 @@
 #include <window.h>
 #include <engine.h>
+#include <font.h>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -17,6 +18,20 @@ __window_t* create_new_window(int argc, char** argv, int window_width, int windo
     if (__status == 0)
     {
         printf("Couldn't initialize SDL image\n");
+        return NULL;
+    }
+
+    __status = TTF_Init();
+    if (__status == -1)
+    {
+        printf("Couldn't initialize SDL ttf\n");
+        return NULL;
+    }
+
+    bool ___status = init_fonts();
+    if (___status == false)
+    {
+        printf("Couldn't initialize SDL ttf\n");
         return NULL;
     }
 

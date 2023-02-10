@@ -11,11 +11,12 @@
 #define WINDOW_WIDTH  640 + 300
 #define WINDOW_HEIGHT 640
 
-// #define WINDOW_BACKGROUND  30, 20, 25, 255
 #define WINDOW_BACKGROUND  56,  56,  56, 255
 
 #define LIGHT_SQUARE_COLOR 227, 193, 111, 255
 #define DARK_SQUARE_COLOR  184, 139, 74,  255
+
+#define FONT_COLOR 240, 240, 240, 255
 
 /* Transposition tables */
 

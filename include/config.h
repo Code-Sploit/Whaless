@@ -3,7 +3,7 @@
 
 #include <stdbool.h>
 
-/* GUI Settings (might not be used) */
+/* GUI Settings */
 
 #define BOARD_SIZE        960
 #define BOARD_SQUARE_SIZE (int)(BOARD_SIZE / 8)

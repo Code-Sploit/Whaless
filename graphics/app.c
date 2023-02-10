@@ -90,12 +90,13 @@ void draw_piece_image(__window_t* window, int x, int y)
 {
     // Which image we need if there isn't any piece in
     // this position just return
-    enum __piece_type piece_type  = game->__board[y][x].__type;
-    enum __player     piece_color = game->__board[y][x].__player;
+    enum __piece_type piece_type  = game->__board[x][y].__type;
+    enum __player     piece_color = game->__board[x][y].__player;
 
     if (piece_type == PIECE_EMPTY) return;
 
     SDL_Texture* piece_image = get_piece_image(piece_type, piece_color);
+
     if (piece_image == NULL) return;
 
     draw_image(window, vec2(x * BOARD_SQUARE_SIZE + (BOARD_SQUARE_SIZE / 2 - 60 / 2), y * BOARD_SQUARE_SIZE + (BOARD_SQUARE_SIZE / 2 - 60 / 2)), piece_image);

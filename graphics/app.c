@@ -50,10 +50,35 @@ void app_start(__window_t* window)
 
 void draw_piece_background(__window_t* window, int x, int y)
 {
-    // Which color should we select and after it draw a rect easy
-    __color_t bg_color = table_color[y][x] == 0 ? (__color_t){ LIGHT_SQUARE_COLOR } : (__color_t){ DARK_SQUARE_COLOR  };
+    enum __piece_type piece_type  = window->__game->__board[x][y].__type;
+    enum __player     piece_color = window->__game->__board[x][y].__player;
+
+    __color_t bg_color;
+    if (table_color[y][x] == 0)
+    {
+        bg_color = (window->src_piece.__file == x && window->src_piece.__rank == y) == true 
+            ? (__color_t){ SELECTED_LIGHT_SQUARE_COLOR }
+            : (__color_t){ LIGHT_SQUARE_COLOR          };
+    }
+    else
+    {
+        bg_color = (window->src_piece.__file == x && window->src_piece.__rank == y) == true 
+            ? (__color_t){ SELECTED_DARK_SQUARE_COLOR }
+            : (__color_t){ DARK_SQUARE_COLOR          };
+    }
+
     draw_rect(window, vec2(x * BOARD_SQUARE_SIZE, y * BOARD_SQUARE_SIZE),
                 vec2(BOARD_SQUARE_SIZE, BOARD_SQUARE_SIZE), bg_color);
+
+    if (piece_type == PIECE_KING)
+    {
+        if (piece_color == PLAYER_WHITE && window->__game->__white_king_in_check == true) 
+            draw_rect(window, vec2(x * BOARD_SQUARE_SIZE, y * BOARD_SQUARE_SIZE),
+                vec2(BOARD_SQUARE_SIZE, BOARD_SQUARE_SIZE), (__color_t){ 255, 0, 0, 70 });
+        if (piece_color == PLAYER_BLACK && window->__game->__black_king_in_check == true)
+            draw_rect(window, vec2(x * BOARD_SQUARE_SIZE, y * BOARD_SQUARE_SIZE),
+                vec2(BOARD_SQUARE_SIZE, BOARD_SQUARE_SIZE), (__color_t){ 255, 0, 0, 70 });
+    }
 }
 
 SDL_Texture* get_piece_image(enum __piece_type piece_type, enum __player piece_color)

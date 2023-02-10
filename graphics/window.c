@@ -42,6 +42,9 @@ __window_t* create_new_window(int argc, char** argv, int window_width, int windo
 
     window->should_close = false;
     window->is_holding_piece = false;
+    window->src_piece.__file = -1;
+
+    SDL_SetRenderDrawBlendMode(window->base_renderer, SDL_BLENDMODE_BLEND);
 
     return window;
 }
@@ -113,19 +116,32 @@ void window_handle_events(__window_t* window)
 
                         printf("Legal Move Evaluation: [%s]\n", __is_valid == true ? "LEGAL" : "ILLEGAL");
 
-                        window->is_holding_piece = false;
-
                         if (__is_valid)
                         {
                             engine_make_move(window->__game, (struct __move) {__position_src, __position_dst}, true);
 
                             printf("Game Evaluation: [%d]\n", engine_evaluate_position(window->__game));
+                            window->src_piece = (struct __board_pos){ -1, -1 };
+                            window->is_holding_piece = false;
+                        }
+                        else
+                        {
+                            window->src_piece = (struct __board_pos){ -1, -1 };
+                            window->is_holding_piece = false;
                         }
                     }
                     else
                     {
-                        window->src_piece = translate_pos_gui_to_real(__x, __y);
-                        window->is_holding_piece = true;
+                        struct __board_pos __position_src = translate_pos_gui_to_real(__x, __y);
+                        struct __piece     __piece_src    = get_piece(window->__game, __position_src);
+
+                        enum __player __to_move = (window->__game->__is_turn_white == true) ? PLAYER_WHITE : PLAYER_BLACK;
+
+                        if (__piece_src.__player == __to_move && __piece_src.__type != PIECE_EMPTY)
+                        {
+                            window->src_piece         = __position_src;
+                            window->is_holding_piece  = true;
+                        }
                     }
                 }
 

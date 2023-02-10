@@ -6,6 +6,8 @@
         "stdbool.h": "c",
         "window.h": "c",
         "draw.h": "c",
-        "sdl_image.h": "c"
+        "sdl_image.h": "c",
+        "engine.h": "c",
+        "chess.h": "c"
     }
 }

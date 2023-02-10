@@ -21,7 +21,7 @@ int main(int argc, char** argv)
     app_start(__main_window);
     while (!__main_window->should_close)
     {
-        window_handle_events(__main_window, __main_window->__game);
+        window_handle_events(__main_window);
         window_clear_bufffer(__main_window);
         app_draw(__main_window);
         window_swap_bufffer(__main_window);

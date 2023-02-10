@@ -30,7 +30,7 @@ __window_t* create_new_window(int argc, char** argv, int window_width, int windo
     return window;
 }
 
-void window_handle_events(__window_t* window, struct __game_state *__state)
+void window_handle_events(__window_t* window)
 {
     if (window == NULL) return;
 

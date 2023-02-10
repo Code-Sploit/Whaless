@@ -102,7 +102,7 @@ void window_handle_events(__window_t* window)
 
                         if (__is_valid)
                         {
-
+                            engine_make_move(window->__game, (struct __move) {__position_src, __position_dst}, true);
                         }
                     }
                     else

@@ -103,6 +103,8 @@ void window_handle_events(__window_t* window)
                         if (__is_valid)
                         {
                             engine_make_move(window->__game, (struct __move) {__position_src, __position_dst}, true);
+
+                            printf("Game Evaluation: [%d]\n", engine_evaluate_position(window->__game));
                         }
                     }
                     else

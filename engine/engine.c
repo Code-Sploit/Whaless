@@ -365,11 +365,11 @@ int engine_evaluate_position(struct __game_state *__state)
 
             if (__file == 2 || __file == 5 || __rank == 2 || __rank == 5)
             {
-                __value = (__piece.__player == PLAYER_WHITE ? 2 : -2);
+                __value = __value + (__piece.__player == PLAYER_WHITE ? 2 : -2);
             }
             else
             {
-                __value = (__piece.__player == PLAYER_WHITE ? 5 : -5);
+                __value = __value - (__piece.__player == PLAYER_WHITE ? 5 : -5);
             }
         }
     }

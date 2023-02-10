@@ -109,8 +109,16 @@ void window_handle_events(__window_t* window)
                     }
                     else
                     {
-                        window->src_piece = translate_pos_gui_to_real(__x, __y);
-                        window->is_holding_piece = true;
+                        struct __board_pos __position_src = translate_pos_gui_to_real(__x, __y);
+                        struct __piece     __piece_src    = get_piece(window->__game, __position_src);
+
+                        enum __player __to_move = (window->__game->__is_turn_white == true) ? PLAYER_WHITE : PLAYER_BLACK;
+
+                        if (__piece_src.__player == __to_move && __piece_src.__type != PIECE_EMPTY)
+                        {
+                            window->src_piece        = __position_src;
+                            window->is_holding_piece = true;
+                        }
                     }
                 }
 

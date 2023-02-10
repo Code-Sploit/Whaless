@@ -631,6 +631,8 @@ void engine_generate_move(struct __game_state *__state, struct __thread_pool *__
 
     struct __atomic_counter *__refcount = acnt_init(MAX_SEARCH_DEPTH);
 
+    printf("d!\n");
+
     for (int __depth = 1; __depth <= MAX_SEARCH_DEPTH; __depth++)
     {
         struct __movegen_task_arg *__arg = malloc(sizeof(*__arg));

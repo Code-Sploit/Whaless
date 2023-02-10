@@ -2,6 +2,8 @@
 #include <engine.h>
 #include <font.h>
 #include <config.h>
+#include <state.h>
+#include <tptable.h>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -92,6 +94,42 @@ void window_handle_events(__window_t* window)
                 if (event.button.button == SDL_BUTTON_LEFT)
                 {
                     /*
+                    * Check if the engine is still generating move
+                    */
+
+                    if (time(NULL) - __fstate_glob.__movegen_started >= MAX_MOVEGEN_SEARCH_TIME)
+                    {
+                        __fstate_glob.__movegen_started = 0;
+
+                        struct __transposition_entry __entry = tptable_get(__fstate_glob.__state->__hash);
+
+                        if (!boardpos_eq(__entry.__best_move.__src, NULL_BOARDPOS))
+                        {
+                            engine_make_move(__fstate_glob.__state, __entry.__best_move, true);
+
+                            if (!boardpos_eq(__fstate_glob.__position, NULL_BOARDPOS) &&
+                                (get_piece(__fstate_glob.__state, __fstate_glob.__position).__type == PIECE_EMPTY ||
+                                boardpos_eq(__fstate_glob.__position, __entry.__best_move.__dst)))
+                            {
+                                __fstate_glob.__position = NULL_BOARDPOS;
+                            }
+
+                            if (engine_is_checkmate(__fstate_glob.__state, PLAYER_WHITE))
+                            {
+                                __fstate_glob.__winner = WINNER_BLACK;
+                            }
+                            else if (engine_is_checkmate(__fstate_glob.__state, PLAYER_BLACK))
+                            {
+                                __fstate_glob.__winner = WINNER_WHITE;
+                            }
+                            else if (engine_is_stalemate(__fstate_glob.__state))
+                            {
+                                __fstate_glob.__winner = WINNER_DRAW;
+                            }
+                        }
+                    }
+
+                    /*
                     * The player clicked a field, get X and Y of mouse
                     */
 
@@ -112,15 +150,19 @@ void window_handle_events(__window_t* window)
 
                         __position_dst = translate_pos_gui_to_real(__x, __y);
 
-                        bool __is_valid = engine_is_legal_move(window->__game, (struct __move) {__position_src, __position_dst});
+                        bool __is_valid = engine_is_legal_move(__fstate_glob.__state, (struct __move) {__position_src, __position_dst});
 
                         printf("Legal Move Evaluation: [%s]\n", __is_valid == true ? "LEGAL" : "ILLEGAL");
 
                         if (__is_valid)
                         {
-                            engine_make_move(window->__game, (struct __move) {__position_src, __position_dst}, true);
+                            engine_make_move(__fstate_glob.__state, (struct __move) {__position_src, __position_dst}, true);
 
-                            printf("Game Evaluation: [%d]\n", engine_evaluate_position(window->__game));
+                            printf("Game Evaluation: [%d]\n", engine_evaluate_position(__fstate_glob.__state));
+                            printf("Generating engine move!\n");
+
+                            __fstate_glob.__movegen_started = time(NULL);
+
                             window->src_piece = (struct __board_pos){ -1, -1 };
                             window->is_holding_piece = false;
                         }
@@ -128,14 +170,15 @@ void window_handle_events(__window_t* window)
                         {
                             window->src_piece = (struct __board_pos){ -1, -1 };
                             window->is_holding_piece = false;
+                            engine_generate_move(__fstate_glob.__state, __fstate_glob.__threadpool, __fstate_glob.__movegen_started);
                         }
                     }
                     else
                     {
                         struct __board_pos __position_src = translate_pos_gui_to_real(__x, __y);
-                        struct __piece     __piece_src    = get_piece(window->__game, __position_src);
+                        struct __piece     __piece_src    = get_piece(__fstate_glob.__state, __position_src);
 
-                        enum __player __to_move = (window->__game->__is_turn_white == true) ? PLAYER_WHITE : PLAYER_BLACK;
+                        enum __player __to_move = (__fstate_glob.__state->__is_turn_white == true) ? PLAYER_WHITE : PLAYER_BLACK;
 
                         if (__piece_src.__player == __to_move && __piece_src.__type != PIECE_EMPTY)
                         {

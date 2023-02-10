@@ -2,6 +2,7 @@
 
 #include <chess.h>
 #include <engine.h>
+#include <state.h>
 #include <draw.h>
 #include <config.h>
 
@@ -45,13 +46,13 @@ void app_start(__window_t* window)
 {
     load_images_pieces(window);
     
-    window->__game = init_gamestate();
+    __fstate_glob.__state = init_gamestate();
 }
 
 void draw_piece_background(__window_t* window, int x, int y)
 {
-    enum __piece_type piece_type  = window->__game->__board[x][y].__type;
-    enum __player     piece_color = window->__game->__board[x][y].__player;
+    enum __piece_type piece_type  = __fstate_glob.__state->__board[x][y].__type;
+    enum __player     piece_color = __fstate_glob.__state->__board[x][y].__player;
 
     __color_t bg_color;
     if (table_color[y][x] == 0)
@@ -72,10 +73,10 @@ void draw_piece_background(__window_t* window, int x, int y)
 
     if (piece_type == PIECE_KING)
     {
-        if (piece_color == PLAYER_WHITE && window->__game->__white_king_in_check == true) 
+        if (piece_color == PLAYER_WHITE && __fstate_glob.__state->__white_king_in_check == true) 
             draw_rect(window, vec2(x * BOARD_SQUARE_SIZE, y * BOARD_SQUARE_SIZE),
                 vec2(BOARD_SQUARE_SIZE, BOARD_SQUARE_SIZE), (__color_t){ 255, 0, 0, 70 });
-        if (piece_color == PLAYER_BLACK && window->__game->__black_king_in_check == true)
+        if (piece_color == PLAYER_BLACK && __fstate_glob.__state->__black_king_in_check == true)
             draw_rect(window, vec2(x * BOARD_SQUARE_SIZE, y * BOARD_SQUARE_SIZE),
                 vec2(BOARD_SQUARE_SIZE, BOARD_SQUARE_SIZE), (__color_t){ 255, 0, 0, 70 });
     }
@@ -115,8 +116,8 @@ void draw_piece_image(__window_t* window, int x, int y)
 {
     // Which image we need if there isn't any piece in
     // this position just return
-    enum __piece_type piece_type  = window->__game->__board[x][y].__type;
-    enum __player     piece_color = window->__game->__board[x][y].__player;
+    enum __piece_type piece_type  = __fstate_glob.__state->__board[x][y].__type;
+    enum __player     piece_color = __fstate_glob.__state->__board[x][y].__player;
 
     if (piece_type == PIECE_EMPTY) return;
 
@@ -145,8 +146,8 @@ void draw_table_info(__window_t* window)
     set_font_size(24);
     draw_text(window, 650, 10, "Whaless");
     set_font_size(20);
-    draw_text(window, 650, 40, "Player move: %s", window->__game->__is_turn_white == true ? "White" : "Black");
-    draw_text(window, 650, 67, "Move count: %d", window->__game->__move_count);
+    draw_text(window, 650, 40, "Player move: %s", __fstate_glob.__state->__is_turn_white == true ? "White" : "Black");
+    draw_text(window, 650, 67, "Move count: %d", __fstate_glob.__state->__move_count);
 }
 
 void app_draw(__window_t* window)

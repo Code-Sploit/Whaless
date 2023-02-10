@@ -14,8 +14,6 @@ typedef struct __window_t {
 
     struct __board_pos src_piece;
 
-    struct __game_state *__game;
-
     SDL_Window* base_window;
     SDL_Renderer* base_renderer;
 

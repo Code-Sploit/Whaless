@@ -1,5 +1,7 @@
 #include <stdio.h>
 
+#include <openings.h>
+
 #include <config.h>
 #include <window.h>
 #include <core.h>
@@ -16,6 +18,10 @@ int main(int argc, char** argv)
         __DEBUG("Couldn't initialize window\n");
         return EXIT_FAILURE;
     }
+
+    __DEBUG("Initializing openings book!\n");
+
+    openings_initialize();
 
     window_set_bg(__main_window, WINDOW_BACKGROUND);
     app_start(__main_window);

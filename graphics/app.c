@@ -2,6 +2,7 @@
 
 #include <chess.h>
 #include <engine.h>
+#include <state.h>
 #include <draw.h>
 #include <config.h>
 
@@ -45,7 +46,7 @@ void app_start(__window_t* window)
 {
     load_images_pieces(window);
     
-    window->__game = init_gamestate();
+    __fstate_glob.__state = init_gamestate();
 }
 
 void draw_piece_background(__window_t* window, int x, int y)
@@ -90,8 +91,8 @@ void draw_piece_image(__window_t* window, int x, int y)
 {
     // Which image we need if there isn't any piece in
     // this position just return
-    enum __piece_type piece_type  = window->__game->__board[x][y].__type;
-    enum __player     piece_color = window->__game->__board[x][y].__player;
+    enum __piece_type piece_type  = __fstate_glob.__state->__board[x][y].__type;
+    enum __player     piece_color = __fstate_glob.__state->__board[x][y].__player;
 
     if (piece_type == PIECE_EMPTY) return;
 

@@ -1,5 +1,6 @@
 #include <window.h>
 #include <engine.h>
+#include <config.h>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -30,6 +31,16 @@ __window_t* create_new_window(int argc, char** argv, int window_width, int windo
     return window;
 }
 
+struct __board_pos translate_pos_gui_to_real(int __x, int __y)
+{
+    struct __board_pos __position;
+
+    __position.__rank = (__y / BOARD_SQUARE_SIZE);
+    __position.__file = (__x / BOARD_SQUARE_SIZE);
+
+    return __position;
+}
+
 void window_handle_events(__window_t* window)
 {
     if (window == NULL) return;
@@ -49,7 +60,10 @@ void window_handle_events(__window_t* window)
                     int __delta_x = event.motion.x;
                     int __delta_y = event.motion.y;
 
-                    printf("Mouse: [DX: %d | DY: %d]\n", __delta_x, __delta_y);
+                    /*
+                    * Do nothing for now
+                    * TODO: Implement sliding pieces                    
+                    */
                 }
 
                 break;
@@ -66,29 +80,39 @@ void window_handle_events(__window_t* window)
                     int __x = event.button.x;
                     int __y = event.button.y;
 
-                    printf("Mouse Click LEFT: [X: %d | Y: %d]\n", __x, __y);
-
                     /*
                     * Is the player holding a piece?
                     * If so -> move the piece to the clicked square
                     * If not -> pickup the piece on the square
                     */
 
-                    struct __board_pos __position_src = window->src_piece;
                     struct __board_pos __position_dst;
 
                     if (window->is_holding_piece)
                     {
-                        //__position_dst = translate_pos_gui_to_real(__x, __y);
+                        struct __board_pos __position_src = window->src_piece;
+
+                        __position_dst = translate_pos_gui_to_real(__x, __y);
 
                         bool __is_valid = engine_is_legal_move(window->__game, (struct __move) {__position_src, __position_dst});
 
-                        if (!__is_valid)
+                        printf("Legal Move Evaluation: [%s]\n", __is_valid == true ? "LEGAL" : "ILLEGAL");
+
+                        window->is_holding_piece = false;
+
+                        if (__is_valid)
                         {
-                            window->is_holding_piece = false;
+
                         }
                     }
+                    else
+                    {
+                        window->src_piece = translate_pos_gui_to_real(__x, __y);
+                        window->is_holding_piece = true;
+                    }
                 }
+
+                break;
             }
         }
     }

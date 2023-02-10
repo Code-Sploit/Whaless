@@ -1,4 +1,5 @@
 #include <window.h>
+#include <engine.h>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -24,11 +25,12 @@ __window_t* create_new_window(int argc, char** argv, int window_width, int windo
     window->base_renderer = SDL_CreateRenderer(window->base_window, -1, SDL_RENDERER_ACCELERATED);
 
     window->should_close = false;
+    window->is_holding_piece = false;
 
     return window;
 }
 
-void window_handle_events(__window_t* window)
+void window_handle_events(__window_t* window, struct __game_state *__state)
 {
     if (window == NULL) return;
 
@@ -39,6 +41,55 @@ void window_handle_events(__window_t* window)
             case SDL_QUIT:
                 window->should_close = true;
                 break;
+            
+            case SDL_MOUSEMOTION:
+            {
+                if (event.button.button == SDL_BUTTON_LEFT)
+                {
+                    int __delta_x = event.motion.x;
+                    int __delta_y = event.motion.y;
+
+                    printf("Mouse: [DX: %d | DY: %d]\n", __delta_x, __delta_y);
+                }
+
+                break;
+            }
+            
+            case SDL_MOUSEBUTTONDOWN:
+            {
+                if (event.button.button == SDL_BUTTON_LEFT)
+                {
+                    /*
+                    * The player clicked a field, get X and Y of mouse
+                    */
+
+                    int __x = event.button.x;
+                    int __y = event.button.y;
+
+                    printf("Mouse Click LEFT: [X: %d | Y: %d]\n", __x, __y);
+
+                    /*
+                    * Is the player holding a piece?
+                    * If so -> move the piece to the clicked square
+                    * If not -> pickup the piece on the square
+                    */
+
+                    struct __board_pos __position_src = window->src_piece;
+                    struct __board_pos __position_dst;
+
+                    if (window->is_holding_piece)
+                    {
+                        //__position_dst = translate_pos_gui_to_real(__x, __y);
+
+                        bool __is_valid = engine_is_legal_move(window->__game, (struct __move) {__position_src, __position_dst});
+
+                        if (!__is_valid)
+                        {
+                            window->is_holding_piece = false;
+                        }
+                    }
+                }
+            }
         }
     }
 }

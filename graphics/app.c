@@ -8,7 +8,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
-static struct __game_state* game       = NULL;
 static unsigned char table_color[8][8] = BOARD_COLORS;
 
 static SDL_Texture* dark_bishop = NULL;
@@ -45,7 +44,8 @@ void load_images_pieces(__window_t* window)
 void app_start(__window_t* window)
 {
     load_images_pieces(window);
-    game = init_gamestate();
+    
+    window->__game = init_gamestate();
 }
 
 void draw_piece_background(__window_t* window, int x, int y)
@@ -90,8 +90,8 @@ void draw_piece_image(__window_t* window, int x, int y)
 {
     // Which image we need if there isn't any piece in
     // this position just return
-    enum __piece_type piece_type  = game->__board[x][y].__type;
-    enum __player     piece_color = game->__board[x][y].__player;
+    enum __piece_type piece_type  = window->__game->__board[x][y].__type;
+    enum __player     piece_color = window->__game->__board[x][y].__player;
 
     if (piece_type == PIECE_EMPTY) return;
 

@@ -1,6 +1,7 @@
 #include <stdio.h>
 
 #include <openings.h>
+#include <state.h>
 
 #include <config.h>
 #include <window.h>
@@ -22,6 +23,7 @@ int main(int argc, char** argv)
     __DEBUG("Initializing openings book!\n");
 
     openings_initialize();
+    state_new_game();
 
     window_set_bg(__main_window, WINDOW_BACKGROUND);
     app_start(__main_window);

@@ -116,5 +116,6 @@ void draw_table_chess(__window_t* window)
 
 void app_draw(__window_t* window)
 {
+    draw_rect(window, vec2(640, 0), vec2(300, WINDOW_HEIGHT), (__color_t){ WINDOW_BACKGROUND });
     draw_table_chess(window);
 }

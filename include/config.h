@@ -5,13 +5,14 @@
 
 /* GUI Settings */
 
-#define BOARD_SIZE        960
+#define BOARD_SIZE        640
 #define BOARD_SQUARE_SIZE (int)(BOARD_SIZE / 8)
 
-#define WINDOW_WIDTH  960
-#define WINDOW_HEIGHT 960
+#define WINDOW_WIDTH  640 + 300
+#define WINDOW_HEIGHT 640
 
-#define WINDOW_BACKGROUND  30, 20, 25, 255
+// #define WINDOW_BACKGROUND  30, 20, 25, 255
+#define WINDOW_BACKGROUND  56,  56,  56, 255
 
 #define LIGHT_SQUARE_COLOR 227, 193, 111, 255
 #define DARK_SQUARE_COLOR  184, 139, 74,  255

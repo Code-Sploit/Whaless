@@ -119,6 +119,9 @@ void draw_table_info(__window_t* window)
     draw_rect(window, vec2(640, 0), vec2(300, WINDOW_HEIGHT), (__color_t){ WINDOW_BACKGROUND });
     set_font_size(24);
     draw_text(window, 650, 10, "Whaless");
+    set_font_size(20);
+    draw_text(window, 650, 40, "Player move: %s", window->__game->__is_turn_white == true ? "White" : "Black");
+    draw_text(window, 650, 67, "Move count: %d", window->__game->__move_count);
 }
 
 void app_draw(__window_t* window)

@@ -1,5 +1,6 @@
 #include <window.h>
 #include <engine.h>
+#include <font.h>
 #include <config.h>
 #include <state.h>
 #include <tptable.h>
@@ -23,12 +24,29 @@ __window_t* create_new_window(int argc, char** argv, int window_width, int windo
         return NULL;
     }
 
+    __status = TTF_Init();
+    if (__status == -1)
+    {
+        printf("Couldn't initialize SDL ttf\n");
+        return NULL;
+    }
+
+    bool ___status = init_fonts();
+    if (___status == false)
+    {
+        printf("Couldn't initialize SDL ttf\n");
+        return NULL;
+    }
+
     __window_t* window = calloc(1, sizeof(__window_t));
     window->base_window = SDL_CreateWindow("Whaless Chess", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, window_width, window_height, 0);
     window->base_renderer = SDL_CreateRenderer(window->base_window, -1, SDL_RENDERER_ACCELERATED);
 
     window->should_close = false;
     window->is_holding_piece = false;
+    window->src_piece.__file = -1;
+
+    SDL_SetRenderDrawBlendMode(window->base_renderer, SDL_BLENDMODE_BLEND);
 
     return window;
 }
@@ -136,8 +154,6 @@ void window_handle_events(__window_t* window)
 
                         printf("Legal Move Evaluation: [%s]\n", __is_valid == true ? "LEGAL" : "ILLEGAL");
 
-                        window->is_holding_piece = false;
-
                         if (__is_valid)
                         {
                             engine_make_move(__fstate_glob.__state, (struct __move) {__position_src, __position_dst}, true);
@@ -147,6 +163,13 @@ void window_handle_events(__window_t* window)
 
                             __fstate_glob.__movegen_started = time(NULL);
 
+                            window->src_piece = (struct __board_pos){ -1, -1 };
+                            window->is_holding_piece = false;
+                        }
+                        else
+                        {
+                            window->src_piece = (struct __board_pos){ -1, -1 };
+                            window->is_holding_piece = false;
                             engine_generate_move(__fstate_glob.__state, __fstate_glob.__threadpool, __fstate_glob.__movegen_started);
                         }
                     }
@@ -159,8 +182,8 @@ void window_handle_events(__window_t* window)
 
                         if (__piece_src.__player == __to_move && __piece_src.__type != PIECE_EMPTY)
                         {
-                            window->src_piece        = __position_src;
-                            window->is_holding_piece = true;
+                            window->src_piece         = __position_src;
+                            window->is_holding_piece  = true;
                         }
                     }
                 }

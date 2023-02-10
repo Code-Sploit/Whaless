@@ -23,6 +23,21 @@ bool boardpos_eq(struct __board_pos __a, struct __board_pos __b)
 struct __board_pos boardpos_add(struct __board_pos __a, struct __board_pos __b)
 {
     struct __board_pos __r = {__a.__file + __b.__file, __a.__rank + __b.__rank};
+/*
+    if (__a.__file > 7 || __a.__rank > 7 || __a.__file < 0 || __a.__rank < 0)
+    {
+        printf("ERROR! in A\n");
+    }
+
+    if (__b.__file > 7 || __b.__rank > 7 || __b.__file < 0 || __b.__rank < 0)
+    {
+        printf("ERROR! in B\n");
+    }
+
+    if (__r.__file > 7 || __r.__rank > 7 || __r.__file < 0 || __r.__rank < 0)
+    {
+        printf("ERROR! in R\n");
+    }*/
 
     return (__r.__file > 7 || __r.__rank > 7 || __r.__file < 0 || __r.__rank < 0) ? NULL_BOARDPOS : __r;
 }

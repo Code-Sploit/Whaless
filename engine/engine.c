@@ -221,7 +221,7 @@ unsigned int engine_order_legal_moves(struct __game_state *__state, enum __playe
             struct __piece __dst_piece = get_piece(__state, __legal_moves[m]);
 
             if ((__dst_piece.__type != PIECE_EMPTY && __dst_piece.__player != __player) ||
-                ((__dst_piece.__type == PIECE_PAWN) && (__src.__file != __legal_moves[m].__file)))
+                (__dst_piece.__type == PIECE_PAWN && __src.__file != __legal_moves[m].__file))
             {
                 __captures[__cidx++] = (struct __move) {__src, __legal_moves[m]};
             }
@@ -244,12 +244,15 @@ unsigned int engine_order_legal_moves(struct __game_state *__state, enum __playe
     }
 
     memcpy(&__combined_moves[__combined_idx], __captures, __cidx * sizeof(struct __move));
-    memcpy(&__combined_moves[__combined_idx], __moves, __midx * sizeof(struct __move));
 
     __combined_idx = (__combined_idx + __cidx);
-    __combined_idx = (__combined_idx + __midx);
 
     free(__captures);
+
+    memcpy(&__combined_moves[__combined_idx], __moves, __midx * sizeof(struct __move));
+
+    __combined_idx = (__combined_idx + __midx);
+
     free(__moves);
 
     *__mout = __combined_moves;
@@ -328,7 +331,7 @@ int engine_evaluate_position(struct __game_state *__state)
     for (int i = 0; i < 8; i++)
     {
         struct __board_pos __direction      = PIECE_MOVE_DIRECTIONS[PIECE_KING - 1][i];
-        struct __board_pos __check_friendly = boardpos_add(__state->__black_king, __direction);
+        struct __board_pos __check_friendly = boardpos_add(__state->__white_king, __direction);
         struct __board_pos __check_enemy    = boardpos_add(__state->__black_king, __direction);
 
         if (!boardpos_eq(__check_friendly, NULL_BOARDPOS))
@@ -468,7 +471,7 @@ int engine_negamax(struct __game_state *__state, int __alpha, int __beta, int __
             return INT_MIN;
         }
 
-        __value = (__value - __value);
+        __value = -__value;
 
         if (__value > __best_value)
         {
@@ -705,6 +708,23 @@ bool engine_is_state_legal(struct __game_state *__state)
 
 void engine_make_move(struct __game_state *__state, struct __move __move, bool __calculate_hash)
 {
+    if (__move.__src.__file > 8 || __move.__src.__file < 0 || __move.__src.__rank > 8 || __move.__src.__rank < 0 ||
+        __move.__dst.__file > 8 || __move.__dst.__file < 0 || __move.__dst.__rank > 8 || __move.__dst.__rank < 0)
+    {
+        printf("ERROR: INVALID MOVE!\n");
+        printf("{\nSRC:\n");
+        printf("\tFILE: %d\n", __move.__src.__file);
+        printf("\tRANK: %d\n", __move.__src.__rank);
+        printf("}\n");
+
+        printf("{\nDST:\n");
+        printf("\tFILE: %d\n", __move.__dst.__file);
+        printf("\tRANK: %d\n", __move.__dst.__rank);
+        printf("}\n");
+
+        return;
+    }
+
     struct __piece __src_piece = get_piece(__state, __move.__src);
     struct __piece __dst_piece = get_piece(__state, __move.__dst);
 
@@ -733,8 +753,8 @@ void engine_make_move(struct __game_state *__state, struct __move __move, bool _
             unset_enpassant_target_file(__state, other_player(__src_piece.__player));
         }
     }
-    else if (__src_piece.__type == PIECE_ROOK && (boardpos_eq(__move.__src, ROOK_STARTING_POSITIONS_LEFT[__src_piece.__player])) ||
-                                                 (boardpos_eq(__move.__src, ROOK_STARTING_POSITIONS_RIGHT[__src_piece.__player])))
+    else if (__src_piece.__type == PIECE_ROOK && (boardpos_eq(__move.__src, ROOK_STARTING_POSITIONS_LEFT[__src_piece.__player]) ||
+                                                 boardpos_eq(__move.__src, ROOK_STARTING_POSITIONS_RIGHT[__src_piece.__player])))
     {
         if (__move.__src.__file == 0)
         {

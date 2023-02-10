@@ -8,13 +8,13 @@ typedef uint64_t zobrist_hash;
 
 enum __piece_type
 {
-    PIECE_EMPTY,
-    PIECE_KING,
-    PIECE_QUEEN,
-    PIECE_ROOK,
-    PIECE_BISHOP,
-    PIECE_KNIGHT,
-    PIECE_PAWN
+    PIECE_EMPTY = 0,
+    PIECE_KING = 1,
+    PIECE_QUEEN = 2,
+    PIECE_ROOK = 3,
+    PIECE_BISHOP = 4,
+    PIECE_KNIGHT = 5,
+    PIECE_PAWN = 6,
 };
 
 enum __player

@@ -103,6 +103,8 @@ void window_handle_events(__window_t* window)
 
                         struct __transposition_entry __entry = tptable_get(__fstate_glob.__state->__hash);
 
+                        if (event.button.x > BOARD_SIZE) return;
+
                         if (!boardpos_eq(__entry.__best_move.__src, NULL_BOARDPOS))
                         {
                             engine_make_move(__fstate_glob.__state, __entry.__best_move, true);

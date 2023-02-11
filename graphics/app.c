@@ -27,19 +27,19 @@ static SDL_Texture* white_rook   = NULL;
 
 void load_images_pieces(__window_t* window)
 {
-    dark_bishop  = load_image(window, "./assets/pieces/dark_bishop.png");
-    dark_king    = load_image(window, "./assets/pieces/dark_king.png");
-    dark_knight  = load_image(window, "./assets/pieces/dark_knight.png");
-    dark_pawn    = load_image(window, "./assets/pieces/dark_pawn.png");
-    dark_queen   = load_image(window, "./assets/pieces/dark_queen.png");
-    dark_rook    = load_image(window, "./assets/pieces/dark_rook.png");
+    dark_bishop  = load_image(window, "./assets/pieces/1/dark_bishop.png");
+    dark_king    = load_image(window, "./assets/pieces/1/dark_king.png");
+    dark_knight  = load_image(window, "./assets/pieces/1/dark_knight.png");
+    dark_pawn    = load_image(window, "./assets/pieces/1/dark_pawn.png");
+    dark_queen   = load_image(window, "./assets/pieces/1/dark_queen.png");
+    dark_rook    = load_image(window, "./assets/pieces/1/dark_rook.png");
 
-    white_bishop = load_image(window, "./assets/pieces/white_bishop.png");
-    white_king   = load_image(window, "./assets/pieces/white_king.png");
-    white_knight = load_image(window, "./assets/pieces/white_knight.png");
-    white_pawn   = load_image(window, "./assets/pieces/white_pawn.png");
-    white_queen  = load_image(window, "./assets/pieces/white_queen.png");
-    white_rook   = load_image(window, "./assets/pieces/white_rook.png");
+    white_bishop = load_image(window, "./assets/pieces/1/white_bishop.png");
+    white_king   = load_image(window, "./assets/pieces/1/white_king.png");
+    white_knight = load_image(window, "./assets/pieces/1/white_knight.png");
+    white_pawn   = load_image(window, "./assets/pieces/1/white_pawn.png");
+    white_queen  = load_image(window, "./assets/pieces/1/white_queen.png");
+    white_rook   = load_image(window, "./assets/pieces/1/white_rook.png");
 }
 
 void app_start(__window_t* window)
